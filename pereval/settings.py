@@ -10,18 +10,38 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import os.path
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+env_path = Path('.')/'.env'
+load_dotenv(dotenv_path=env_path)
+# dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+# if os.path.exists(dotenv_path):
+#     load_dotenv(dotenv_path)
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+# DATABASES = os.getenv("DATABASES")
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'perevaldb',
+        'USER': 'postgres',
+        'PASSWORD': os.getenv("DB_PASS"),
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    },
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fsy+w2oti5))r6&2t&hfr)m_+2n5fn08gky#_t=@=7)4)#&kft'
+# SECRET_KEY = 'django-insecure-fsy+w2oti5))r6&2t&hfr)m_+2n5fn08gky#_t=@=7)4)#&kft'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -29,7 +49,6 @@ DEBUG = True
 SITE_ID = 1
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -82,20 +101,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pereval.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'perevaldb',
-        'USER': 'postgres',
-        'PASSWORD': '321678',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    },
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'perevaldb',
+#         'USER': 'postgres',
+#         'PASSWORD': '321678',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     },
+# }
 
 
 # Password validation
@@ -116,7 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -127,7 +144,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/

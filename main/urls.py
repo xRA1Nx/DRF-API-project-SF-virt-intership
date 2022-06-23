@@ -6,4 +6,5 @@ urlpatterns = [
     path('', PerevalListView.as_view()),
     path('coards/', CoardsListView.as_view()),
 
+
 ]
