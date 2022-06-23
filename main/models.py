@@ -1,6 +1,6 @@
 from django.db import models
-from pereval.users.models import User
-# from django.contrib.auth.models import User
+from users.models import User
+
 
 status_choices = [
     ("new", "новый"),
@@ -17,24 +17,27 @@ class Coards(models.Model):
 
 
 class PerevalAdd(models.Model):
-    date_added = models.DateField(auto_now_add=True)
-    add_time = models.TimeField(auto_now_add=True)
-    beautyTitle = models.CharField(max_length=255)
+
     title = models.CharField(max_length=255)
+    beautyTitle = models.CharField(max_length=255)
     other_titles = models.CharField(max_length=255)
     connect = models.TextField()
-    status = models.CharField(max_length=10, choices=status_choices, default=("new", "новый"))
-    users = models.ManyToManyField(User, through='PerevalUser')
-    id_coards = models.OneToOneField(Coards, on_delete=models.CASCADE)
+
+    coards = models.OneToOneField(Coards, on_delete=models.CASCADE)
 
     level_winter = models.CharField(max_length=255)
     level_summer = models.CharField(max_length=255)
     level_autumn = models.CharField(max_length=255)
     level_spring = models.CharField(max_length=255)
 
+    status = models.CharField(max_length=10, choices=status_choices, default="new")
+    date_added = models.DateField(auto_now_add=True)
+    add_time = models.TimeField(auto_now_add=True)
+    users = models.ManyToManyField(User, through='PerevalUser')
+
 
 class PerevalUser(models.Model):
-    id_user = models.ForeignKey('User', on_delete=models.CASCADE)
+    id_user = models.ForeignKey(User, on_delete=models.CASCADE)
     pereval = models.ForeignKey(PerevalAdd, on_delete=models.CASCADE)
 
 
