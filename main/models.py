@@ -22,7 +22,6 @@ class PerevalAdd(models.Model):
     beautyTitle = models.CharField(max_length=255)
     other_titles = models.CharField(max_length=255)
     connect = models.TextField()
-
     coards = models.OneToOneField(Coards, on_delete=models.CASCADE)
 
     level_winter = models.CharField(max_length=255)
