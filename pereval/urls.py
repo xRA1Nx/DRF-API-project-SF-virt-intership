@@ -28,5 +28,5 @@ urlpatterns = [
     # path('', include(router.urls)),
     path('accounts/', include('allauth.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/pereval/', include('main.urls')),
+    path('api/v1/submit-data/', include('main.urls')),
 ]

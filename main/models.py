@@ -22,12 +22,16 @@ class PerevalAdd(models.Model):
     beautyTitle = models.CharField(max_length=255)
     other_titles = models.CharField(max_length=255)
     connect = models.TextField()
-    coards = models.OneToOneField(Coards, on_delete=models.CASCADE)
+    # coards = models.OneToOneField(Coards, on_delete=models.CASCADE)
 
     level_winter = models.CharField(max_length=255)
     level_summer = models.CharField(max_length=255)
     level_autumn = models.CharField(max_length=255)
     level_spring = models.CharField(max_length=255)
+
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    height = models.IntegerField()
 
     status = models.CharField(max_length=10, choices=status_choices, default="new")
     date_added = models.DateField(auto_now_add=True)
@@ -50,7 +54,7 @@ class PerevalImages(models.Model):
     pereval = models.ForeignKey(PerevalAdd, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     date_added = models.DateTimeField(auto_now_add=True)
-    img = models.BinaryField()
+    img = models.ImageField(upload_to='photos/%Y/%m/%d/')
 
 
 class ActivitiesTypes(models.Model):
