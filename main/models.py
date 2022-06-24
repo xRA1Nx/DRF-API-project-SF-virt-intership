@@ -45,7 +45,6 @@ class PerevalUser(models.Model):
 
 
 class PerevalAreas(models.Model):
-
     id_parent = models.IntegerField()
     title = models.TextField()
 

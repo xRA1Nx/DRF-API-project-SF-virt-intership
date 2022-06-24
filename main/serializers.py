@@ -1,12 +1,8 @@
-from main.models import Coards, PerevalAdd, PerevalImages
+from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser
 from rest_framework import serializers
 
 
-
 class CoardsSerializer(serializers.ModelSerializer):
-    """координаты перевала"""
-
-
     class Meta:
         model = Coards
         # exclude = (id,)
@@ -24,8 +20,6 @@ class CoardsSerializer(serializers.ModelSerializer):
 
 
 class PerevalsSerializer(serializers.ModelSerializer):
-    """список перевалов"""
-
     # coards = serializers.PrimaryKeyRelatedField(queryset=Coards.objects.all())
 
     class Meta:
@@ -46,24 +40,24 @@ class PerevalsSerializer(serializers.ModelSerializer):
 
 
 class PerevalSerializer(serializers.ModelSerializer):
-    """детализация перевала"""
-
     class Meta:
         model = PerevalAdd
         fields = "__all__"
 
 
-class PhotoSerializer(serializers.ModelSerializer):
-    """Фотограии перевала"""
+class PhotoDeteilSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PerevalImages
+        fields = "__all__"
 
+
+class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerevalImages
         fields = "__all__"
 
 
 class PhotoAddSerializer(serializers.ModelSerializer):
-    """Фотограии перевала"""
-
     img = serializers.ImageField(max_length=None, use_url=True)
 
     class Meta:
@@ -74,3 +68,29 @@ class PhotoAddSerializer(serializers.ModelSerializer):
             "date_added",
             "pereval"
         )
+
+
+class UsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "email")
+
+
+class UserDeteilSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "email", "fname", "lname")
+
+
+class UserAddSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username", "email")
+
+
+class PerevalUserSerializer:
+    
+
+    class Meta:
+        model = PerevalUser
+        fields = "__all__"
