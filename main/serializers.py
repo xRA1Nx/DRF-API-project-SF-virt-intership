@@ -27,19 +27,29 @@ class CoardsSerializer(serializers.ModelSerializer):
                   "level_spring",
                   )
 
-class PerevalUpdSerializer(serializers.ModelSerializer):
 
+class PerevalUpdSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerevalAdd
-        fields = ("beautyTitle",
-                  # "title",
-                  "other_titles",
-                  "connect",
-                  "level_winter",
-                  "level_summer",
-                  "level_autumn",
-                  "level_spring",
-                  )
+        fields = (
+            "status",
+            "photos",
+            "title",
+            "beautyTitle",
+            "other_titles",
+            "connect",
+            "level_winter",
+            "level_summer",
+            "level_autumn",
+            "level_spring",
+            "latitude",
+            "longitude",
+            "height",
+            "date_added",
+            "add_time",
+            # "users",
+        )
+
 
 class PerevalsSerializer(serializers.ModelSerializer):
     # coards = serializers.PrimaryKeyRelatedField(queryset=Coards.objects.all())
@@ -67,7 +77,7 @@ class PerevalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PerevalAdd
-        exclude = ("status",)  # все поля кроме статуса
+        exclude = ("status", )  # все поля кроме статуса
 
 
 class PhotoDeteilSerializer(serializers.ModelSerializer):

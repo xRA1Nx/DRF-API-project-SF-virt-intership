@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'main',
     'rest_framework',
+    'drf_yasg',
+
 
 ]
 

@@ -63,5 +63,3 @@ class PerevalImages(models.Model):
 
 
 
-class ActivitiesTypes(models.Model):
-    title = models.TextField()

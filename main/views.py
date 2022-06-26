@@ -1,41 +1,54 @@
 from rest_framework.generics import get_object_or_404
+from rest_framework.viewsets import GenericViewSet
 
 from main.serializers import *
 from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 
 
-class PerevalView(viewsets.ModelViewSet):
-    def get_queryset(self):
-        if self.action == "list":
-            return PerevalAdd.objects.all()
-        elif self.action in ["create", "update"]:
-            return PerevalAdd.objects.get(pk=self.kwargs['pk'])
+class PerevalView(mixins.CreateModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin,
+                  mixins.ListModelMixin,
+                  GenericViewSet):
+
+    queryset = PerevalAdd.objects.all()
 
     def get_serializer_class(self):
         if self.action == "list":
             return PerevalsSerializer
-        elif self.action in ["retrieve", "create"]:
-            return PerevalSerializer
         elif self.action == "update":
             return PerevalUpdSerializer
+        else:
+            return PerevalSerializer
 
     # переписываем метод. В случае если нет такой страницы возвращаем 404 ответ
-    def retrieve(self, request, *args, **kwargs, ):
-        queryset = PerevalAdd.objects.filter(id=self.kwargs["pk"])
-        item = get_object_or_404(queryset)
-        serializer = PerevalSerializer(item)
-        return Response(serializer.data)
+    # def retrieve(self, request, *args, **kwargs, ):
+    #     queryset = PerevalAdd.objects.filter(id=kwargs["pk"])
+    #     item = get_object_or_404(queryset)
+    #     serializer = PerevalSerializer(item)
+    #     return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
-        queryset = PerevalAdd.objects.filter(id=self.kwargs["pk"])
-        item = get_object_or_404(queryset)
-        serializer = PerevalUpdSerializer(item)
-        return Response(serializer.data)
+        pk = kwargs.get("pk", None)
 
+        try:
+            instance = PerevalAdd.objects.get(pk=pk)
+        except:
+            return Response({"error:object doesn`t exists"}, status=400)
+
+        if instance.status != "new":
+            return Response({"message": "u can change objects only with status new", "state": 0}, status=400)
+        else:
+            # для метода upd обязательно нужно передать instance, иначе сериализатор будет воспринимать это как create
+            serializer = PerevalUpdSerializer(data=request.data, instance=instance)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=200)
 
 
 
@@ -128,5 +141,5 @@ class PerevalUsersListView(APIView):
 
     def get(self, request):
         item = PerevalUser.objects.all()
-        serializer = PerevalUserSerializer(item, many=True)
+        serializer = PerevalUserSerializer(data=item, many=True)
         return Response(serializer.data, status=200)
