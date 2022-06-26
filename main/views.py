@@ -2,11 +2,16 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.viewsets import GenericViewSet
 
 from main.serializers import *
-from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser
+from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser, PerevalAreas
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets, mixins
+
+
+class AreasView(viewsets.ModelViewSet):
+    queryset = PerevalAreas.objects.all()
+    serializer_class = AreasSerializer
 
 
 class PerevalView(mixins.CreateModelMixin,
@@ -15,7 +20,6 @@ class PerevalView(mixins.CreateModelMixin,
                   mixins.DestroyModelMixin,
                   mixins.ListModelMixin,
                   GenericViewSet):
-
     queryset = PerevalAdd.objects.all()
 
     def get_serializer_class(self):
@@ -49,7 +53,6 @@ class PerevalView(mixins.CreateModelMixin,
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=200)
-
 
 
 class PhotoListView(APIView):

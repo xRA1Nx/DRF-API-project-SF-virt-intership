@@ -48,7 +48,7 @@ class PerevalUser(models.Model):
 
 
 class PerevalAreas(models.Model):
-    id_parent = models.IntegerField()
+    pereval = models.ForeignKey(PerevalAdd, on_delete=models.CASCADE, related_name="areas")
     title = models.TextField()
 
 

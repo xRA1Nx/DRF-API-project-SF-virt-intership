@@ -1,4 +1,4 @@
-from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser
+from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser, PerevalAreas
 from rest_framework import serializers
 from rest_framework.response import Response
 
@@ -9,6 +9,12 @@ def file_size(value):  # add this to some file where you can import it from
     limit = 2 * 1024 * 1024
     if value.size > limit:
         raise ValidationError('File too large. Size should not exceed 2 MiB.')
+
+
+class AreasSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PerevalAreas
+        fields = "__all__"
 
 
 class CoardsSerializer(serializers.ModelSerializer):
@@ -33,6 +39,7 @@ class PerevalUpdSerializer(serializers.ModelSerializer):
         model = PerevalAdd
         fields = (
             "status",
+            "areas",
             "photos",
             "title",
             "beautyTitle",
@@ -74,10 +81,11 @@ class PerevalSerializer(serializers.ModelSerializer):
     # photos = serializers.StringRelatedField(many=True)
     # photos = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalImages.get(pereval_id=))
     photos = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalImages.objects.all())
+    areas = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalAreas.objects.all())
 
     class Meta:
         model = PerevalAdd
-        exclude = ("status", )  # все поля кроме статуса
+        exclude = ("status",)  # все поля кроме статуса
 
 
 class PhotoDeteilSerializer(serializers.ModelSerializer):
