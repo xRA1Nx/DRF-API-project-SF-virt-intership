@@ -1,3 +1,5 @@
+from rest_framework.generics import get_object_or_404
+
 from main.serializers import *
 from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser
 
@@ -6,39 +8,35 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 
 
-class PerevalListView(APIView):
-    """вывод списка всех координат"""
+class PerevalView(viewsets.ModelViewSet):
+    def get_queryset(self):
+        if self.action == "list":
+            return PerevalAdd.objects.all()
+        elif self.action in ["create", "update"]:
+            return PerevalAdd.objects.get(pk=self.kwargs['pk'])
 
-    def get(self, request):
-        perevals = PerevalAdd.objects.all()
-        serializer = PerevalsSerializer(perevals, many=True)
-        return Response(serializer.data, status=200)
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PerevalsSerializer
+        elif self.action in ["retrieve", "create"]:
+            return PerevalSerializer
+        elif self.action == "update":
+            return PerevalUpdSerializer
+
+    # переписываем метод. В случае если нет такой страницы возвращаем 404 ответ
+    def retrieve(self, request, *args, **kwargs, ):
+        queryset = PerevalAdd.objects.filter(id=self.kwargs["pk"])
+        item = get_object_or_404(queryset)
+        serializer = PerevalSerializer(item)
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        queryset = PerevalAdd.objects.filter(id=self.kwargs["pk"])
+        item = get_object_or_404(queryset)
+        serializer = PerevalUpdSerializer(item)
+        return Response(serializer.data)
 
 
-class PerevalCreateView(APIView):
-    """вывод списка всех координат"""
-
-    def post(self, request):
-        pereval = PerevalsSerializer(data=request.data)
-        if pereval.is_valid():
-            pereval.save()
-            return Response(status=201)
-        else:
-            print("ошибка")
-            return Response({"error": "validation error"}, status=400)
-
-
-class PerevalDeteilView(APIView):
-    """Детализация перевала"""
-
-    def get(self, request, pk):
-        try:
-            pereval = PerevalAdd.objects.get(id=pk)
-        except:
-            return Response({"error": f"id={pk} doesn`t exists "}, status=400)
-
-        serializer = PerevalSerializer(pereval)
-        return Response(serializer.data, status=200)
 
 
 class PhotoListView(APIView):
@@ -63,10 +61,12 @@ class PhotoDeteilView(APIView):
         return Response(serializer.data, status=200)
 
 
-class PhotoAddView(APIView):
+class PhotoAddView(viewsets.ModelViewSet):
     """добавляем фотографию"""
+    queryset = PerevalImages.objects.all()
+    serializer_class = PhotoAddSerializer
 
-    def post(self, request):
+    def create(self, request):
         photo = PhotoAddSerializer(data=request.data)
         if photo.is_valid():
             photo.save()
@@ -97,10 +97,12 @@ class UserDeteilView(APIView):
         return Response(serializer.data, status=200)
 
 
-class UserAddView(APIView):
+class UserAddView(viewsets.ModelViewSet):
     """Создание пользователя"""
+    queryset = User.objects.all()
+    serializer_class = UserAddSerializer
 
-    def post(self, request):
+    def create(self, request):
         item = UserAddSerializer(data=request.data)
         if item.is_valid():
             item.save()

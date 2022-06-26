@@ -38,9 +38,12 @@ class PerevalAdd(models.Model):
     add_time = models.TimeField(auto_now_add=True)
     users = models.ManyToManyField(User, through='PerevalUser')
 
+    def __str__(self):
+        return f"id: {self.pk}, title:{self.title}"
+
 
 class PerevalUser(models.Model):
-    id_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     pereval = models.ForeignKey(PerevalAdd, on_delete=models.CASCADE)
 
 
@@ -50,10 +53,14 @@ class PerevalAreas(models.Model):
 
 
 class PerevalImages(models.Model):
-    pereval = models.ForeignKey(PerevalAdd, on_delete=models.CASCADE)
+    pereval = models.ForeignKey(PerevalAdd, on_delete=models.CASCADE, related_name="photos")
     title = models.CharField(max_length=255)
-    date_added = models.DateTimeField(auto_now_add=True)
+    date_added = models.DateField(auto_now_add=True)
     img = models.ImageField(upload_to='photos/%Y/%m/%d/')
+
+    def __str__(self):
+        return f"id: {self.pk}, title:{self.title}"
+
 
 
 class ActivitiesTypes(models.Model):
