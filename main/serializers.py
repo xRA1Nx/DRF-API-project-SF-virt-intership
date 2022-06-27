@@ -1,4 +1,4 @@
-from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser, PerevalAreas
+from main.models import PerevalAdd, PerevalImages, User, PerevalUser, PerevalAreas
 from rest_framework import serializers
 from rest_framework.response import Response
 
@@ -15,23 +15,6 @@ class AreasSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerevalAreas
         fields = "__all__"
-
-
-class CoardsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Coards
-        # exclude = (id,)
-        # fields = ("latitude", "longitude", "height")
-        fields = ("beautyTitle",
-                  "title",
-                  "other_titles",
-                  "connect",
-                  "coards",
-                  "level_winter",
-                  "level_summer",
-                  "level_autumn",
-                  "level_spring",
-                  )
 
 
 class PerevalUpdSerializer(serializers.ModelSerializer):
@@ -82,6 +65,7 @@ class PerevalSerializer(serializers.ModelSerializer):
     # photos = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalImages.get(pereval_id=))
     photos = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalImages.objects.all())
     areas = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalAreas.objects.all())
+    pu_users = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalUser.objects.all())
 
     class Meta:
         model = PerevalAdd
@@ -132,6 +116,11 @@ class UserAddSerializer(serializers.ModelSerializer):
 
 
 class PerevalUserSerializer:
+    pu_user = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=User.objects.all())
+    pu_pereval = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=PerevalAdd.objects.all())
+
     class Meta:
         model = PerevalUser
-        fields = "__all__"
+        fields = ("pu_pereval", "pu_user")

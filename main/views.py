@@ -2,11 +2,16 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.viewsets import GenericViewSet
 
 from main.serializers import *
-from main.models import Coards, PerevalAdd, PerevalImages, User, PerevalUser, PerevalAreas
+from main.models import  PerevalAdd, PerevalImages, User, PerevalUser, PerevalAreas
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets, mixins
+
+
+class PerevalUserView(viewsets.ModelViewSet):
+    queryset = PerevalUser.objects.all()
+    serializer_class = PerevalUserSerializer
 
 
 class AreasView(viewsets.ModelViewSet):
