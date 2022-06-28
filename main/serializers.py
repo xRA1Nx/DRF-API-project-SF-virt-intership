@@ -65,6 +65,7 @@ class PerevalSerializer(serializers.ModelSerializer):
     # photos = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalImages.get(pereval_id=))
     photos = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalImages.objects.all())
     areas = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalAreas.objects.all())
+    users = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
 
     class Meta:
         model = PerevalAdd
