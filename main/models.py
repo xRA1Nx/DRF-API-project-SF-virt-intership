@@ -36,7 +36,7 @@ class PerevalAdd(models.Model):
 
 class PerevalUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pu_user")
-    pereval = models.ForeignKey(PerevalAdd, on_delete=models.CASCADE, related_name="pu_pereval")
+    pereval = models.ForeignKey(PerevalAdd, on_delete=models.CASCADE, related_name="pereval")
 
     def __str__(self):
         return f"id: {self.pk}, username:{self.user}"

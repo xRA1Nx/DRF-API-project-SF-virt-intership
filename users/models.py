@@ -90,3 +90,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_absolute_url(self):
         return "/users/%i/" % (self.pk)
+
+    def __str__(self):
+        return f"id: {self.pk}, username:{self.username}"

@@ -65,7 +65,6 @@ class PerevalSerializer(serializers.ModelSerializer):
     # photos = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalImages.get(pereval_id=))
     photos = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalImages.objects.all())
     areas = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalAreas.objects.all())
-    pu_users = serializers.PrimaryKeyRelatedField(many=True, queryset=PerevalUser.objects.all())
 
     class Meta:
         model = PerevalAdd
@@ -115,12 +114,12 @@ class UserAddSerializer(serializers.ModelSerializer):
         fields = ("username", "email")
 
 
-class PerevalUserSerializer:
-    pu_user = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=User.objects.all())
-    pu_pereval = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=PerevalAdd.objects.all())
+class PerevalUserSerializer(serializers.ModelSerializer):
+    # pu_user = serializers.PrimaryKeyRelatedField(
+    #     many=True, queryset=User.objects.all())
+    # pu_pereval = serializers.PrimaryKeyRelatedField(
+    #     many=True, queryset=PerevalAdd.objects.all())
 
     class Meta:
         model = PerevalUser
-        fields = ("pu_pereval", "pu_user")
+        fields = "__all__"

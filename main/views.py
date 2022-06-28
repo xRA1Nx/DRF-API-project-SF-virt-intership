@@ -1,8 +1,9 @@
+from django.forms import model_to_dict
 from rest_framework.generics import get_object_or_404
 from rest_framework.viewsets import GenericViewSet
 
 from main.serializers import *
-from main.models import  PerevalAdd, PerevalImages, User, PerevalUser, PerevalAreas
+from main.models import PerevalAdd, PerevalImages, User, PerevalUser, PerevalAreas
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -22,7 +23,6 @@ class AreasView(viewsets.ModelViewSet):
 class PerevalView(mixins.CreateModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
                   mixins.ListModelMixin,
                   GenericViewSet):
     queryset = PerevalAdd.objects.all()
@@ -42,6 +42,36 @@ class PerevalView(mixins.CreateModelMixin,
     #     serializer = PerevalSerializer(item)
     #     return Response(serializer.data)
 
+    def list(self, request, *args, **kwargs):
+        # если гет запрос не пустой
+        if request.GET:
+            my_email = request.GET.get('user__email', None)
+            # если существует гет запрос с ключем  user__email
+            if my_email:
+                my_email = my_email[:-1]
+                qs_users = User.objects.filter(email=my_email)
+                # если существует пользователь с email из гет запроса
+                if qs_users.exists():
+                    user = qs_users[0]
+                    queryset = user.perevaladd_set.all()
+                    serializer = PerevalsSerializer(queryset, many=True)
+                    return Response(serializer.data, status=200)
+                else:
+                    return Response({"error": f"не существует пользователя с email: {my_email}"}, status=400)
+            else:
+                # не корректно указан ключ в гет запросе
+                return Response({"error": "не корректный указан get запрос"}, status=400)
+        #если нет гет запроса то просто выводим список pereval
+        else:
+            queryset = PerevalAdd.objects.all()
+            serializer = PerevalsSerializer(queryset, many=True)
+            return Response(serializer.data, status=200)
+
+        # queryset = PerevalAdd.objects.all()
+        # serializer = PerevalsSerializer(queryset, many=True)
+        # return Response(serializer.data, status=200)
+
+
     def update(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)
 
@@ -57,7 +87,7 @@ class PerevalView(mixins.CreateModelMixin,
             serializer = PerevalUpdSerializer(data=request.data, instance=instance)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(serializer.data, status=200)
+            return Response({"state": 1}, status=200)
 
 
 class PhotoListView(APIView):
