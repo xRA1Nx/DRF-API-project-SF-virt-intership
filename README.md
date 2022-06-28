@@ -26,6 +26,7 @@ http://127.0.0.1:8000/api/v1/submit-data/photos/add/ - добавление но
 для данного представления переопределены методы get_serialaer и list и update т.к. от ТЗ состояло из нетиповых задач
 
 Пример метода update:
+
     def update(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)
 
